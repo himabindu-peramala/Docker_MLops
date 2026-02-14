@@ -4,11 +4,20 @@ This repository features a collection of enhanced Docker labs designed to demons
 
 ## Key Enhancements
 
-All labs in this repository have been upgraded with the following production-grade features:
+I have refactored these labs to align with industry-standard MLOps practices:
 
-*   **Security First**: Containers run as a non-root user (appuser) to prevent privilege escalation attacks. Minimal base images (python:3.10-slim) reduce surface area for vulnerabilities.
-*   **Optimized Builds**: Multi-stage builds separate build-time dependencies from runtime requirements, resulting in smaller image sizes. Docker Layer Caching is leveraged by ordering instructions from least to most frequently changed.
-*   **Isolation and Networking**: Services communicate over custom bridge networks, isolated from the host and other containers. .dockerignore files prevent unnecessary local files (like .git, .venv, __pycache__) from contaminating the build context.
+*   **🔒 Security Hardening**:
+    *   Implemented **non-root execution** (`appuser`) to enforce least-privilege principles.
+    *   Switched to **slim base images** to minimize vulnerability surface area.
+
+*   **⚡ Performance Optimization**:
+    *   Leveraged **multi-stage builds** to reduce final image size by excluding build tools.
+    *   Optimized **Docker layer caching** for faster rebuilds during development.
+
+*   **🏗️ Modern Architecture**:
+    *   **Microservices**: Decoupled training and serving logic into independent, scalable containers.
+    *   **Networking**: Configured custom isolated bridge networks for secure service-to-service communication.
+    *   **Resilience**: Added resource limits (CPU/RAM) and automatic restart policies.
 
 ---
 
