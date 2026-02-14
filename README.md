@@ -4,17 +4,17 @@ This repository features a collection of enhanced Docker labs designed to demons
 
 ## Key Enhancements
 
-I have refactored these labs to align with industry-standard MLOps practices:
+All labs in this repository have been upgraded with the following production-grade features:
 
-*   **🔒 Security Hardening**:
+*   **Security Hardening**:
     *   Implemented **non-root execution** (`appuser`) to enforce least-privilege principles.
     *   Switched to **slim base images** to minimize vulnerability surface area.
 
-*   **⚡ Performance Optimization**:
+*   **Performance Optimization**:
     *   Leveraged **multi-stage builds** to reduce final image size by excluding build tools.
     *   Optimized **Docker layer caching** for faster rebuilds during development.
 
-*   **🏗️ Modern Architecture**:
+*   **Modern Architecture**:
     *   **Microservices**: Decoupled training and serving logic into independent, scalable containers.
     *   **Networking**: Configured custom isolated bridge networks for secure service-to-service communication.
     *   **Resilience**: Added resource limits (CPU/RAM) and automatic restart policies.
