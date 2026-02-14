@@ -1,6 +1,6 @@
 # Enhanced Docker Labs for MLOps
 
-This repository features a collection of enhanced Docker labs designed to demonstrate best practices in Machine Learning Operations (MLOps). The labs originally stem from an MLOps curriculum but have been significantly refactored to focus on efficiency, security, and modern Docker architecture.
+This repository features a collection of enhanced Docker labs designed to demonstrate best practices in Machine Learning Operations (MLOps). These labs focus on efficiency, security, and modern Docker architecture, showcasing production-ready implementations for model training and serving.
 
 ## Key Enhancements
 
