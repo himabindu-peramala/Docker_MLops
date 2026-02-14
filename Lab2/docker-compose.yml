@@ -1,0 +1,62 @@
+services:
+  # Service 1: Train the model
+  model-training:
+    build:
+      context: .
+      target: builder # Use the builder stage (or serving stage if it has all tools, but builder is logically for training)
+    # Actually, we can use the same image context but specific command.
+    # Since we split "builder" and "serving", let's use "serving" image for both if it has all deps, or just use one common image.
+    # The 'serving' stage has 'src/' and 'requirements'. The 'builder' stage has them too.
+    # Let's use the 'serving' stage (final image) for both to simplify, as it contains all code.
+    image: lab2-mlops:latest
+    container_name: ml_trainer
+    working_dir: /app
+    volumes:
+      - ./src:/app/src
+      - model_exchange:/exchange
+    command: >
+      sh -c "python src/model_training.py &&
+             cp my_model.keras /exchange/my_model.keras"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+    networks:
+      - ml-network
+
+  # Service 2: Serve the model
+  serving:
+    build:
+      context: .
+      target: serving
+    image: lab2-mlops:latest
+    container_name: ml_serving
+    working_dir: /app
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/app/src
+      - model_exchange:/exchange
+    depends_on:
+      model-training:
+        condition: service_completed_successfully
+    command: >
+      sh -c "cp /exchange/my_model.keras ./my_model.keras &&
+             python src/main.py"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+    networks:
+      - ml-network
+
+volumes:
+  model_exchange:
+
+
+networks:
+  ml-network:
+    driver: bridge

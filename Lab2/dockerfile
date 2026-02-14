@@ -1,0 +1,46 @@
+# Stage 1: Build and Train the Model
+FROM python:3.10-slim AS builder
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy source code
+COPY src/ src/
+
+# Run training (outputs model to local file in container)
+# Note: In the compose setup, this might be overridden or we might rely on the volume for the output.
+# But for a standalone build, we can run it here or just prepare the environment.
+# Since the goal is MLOps, usually training is a job.
+# Let's keep the image capable of training.
+
+# Stage 2: Serve Predictions
+FROM python:3.10-slim AS serving
+
+WORKDIR /app
+
+# Create non-root user
+RUN useradd -m appuser
+
+# Copy dependencies from builder (or reinstall to keep image slim? Reinstalling is safer for distinct stages if no wheel-builder pattern used)
+# Simpler: just install requirements in this stage too.
+COPY requirements.txt .
+RUN pip install --no-cache-dir --trusted-host pypi.python.org -r requirements.txt
+
+# Copy application code
+COPY src/ src/
+# Create directory for model mount if needed
+RUN mkdir -p /app/model && chown appuser /app/model
+
+# Switch to non-root user
+USER appuser
+
+EXPOSE 80
+
+# Healthcheck
+HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
+
+# Default command
+CMD ["python", "src/main.py"]
